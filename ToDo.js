@@ -64,12 +64,6 @@ class TodoList {
     return this.todos[index];
   }
 
-  _validateIndex(index) {
-    if (!(index in this.todos)) {
-      throw ReferenceError(`invalid index: ${index}`)
-    }
-  }
-
   markDoneAt(index) {
     this.itemAt(index).markDone();
   }
@@ -99,6 +93,12 @@ class TodoList {
     let title = `---- ${this.title} ----`;
     let list = this.todos.map(todo => todo.toString()).join("\n");
     return `${title}\n${list}`;
+  }
+
+  _validateIndex(index) {
+    if (!(index in this.todos)) {
+      throw ReferenceError(`invalid index: ${index}`)
+    }
   }
 }
 
