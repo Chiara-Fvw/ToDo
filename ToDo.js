@@ -32,3 +32,89 @@ class Todo {
     return this.title;
   }
 }
+
+class TodoList {
+  constructor(title) {
+    this.title = title;
+    this.todos = [];
+  }
+
+  add(todo) {
+    if (!(todo instanceof Todo)) {
+      throw new TypeError("can only add Todo objects");
+    } 
+
+    this.todos.push(todo);
+  }
+
+  size() {
+     return this.todos.length;
+  }
+
+  first() {
+    return this.todos[0];
+  }
+
+  last() {
+    return this.todos[this.size() - 1];
+  }
+
+  itemAt(index) {
+    this._validateIndex(index);
+    return this.todos[index];
+  }
+
+  _validateIndex(index) {
+    if (!(index in this.todos)) {
+      throw ReferenceError(`invalid index: ${index}`)
+    }
+  }
+
+  markDoneAt(index) {
+    this.itemAt(index).markDone();
+  }
+
+  markUndoneAt(index) {
+    this.itemAt(index).markUndone();
+  }
+
+  isDone() {
+   return this.todos.every(todo => todo.isDone());
+  }
+
+  shift() {
+    return this.todos.shift();
+  }
+
+  pop() {
+    return this.todos.pop();
+  }
+
+  removeAt(index) {
+    this._validateIndex(index);
+    return this.todos.splice(index, 1);
+  }
+
+  toString() {
+    let title = `---- ${this.title} ----`;
+    let list = this.todos.map(todo => todo.toString()).join("\n");
+    return `${title}\n${list}`;
+  }
+}
+
+let list = new TodoList("Today's Todos");
+
+let todo1 = new Todo("Buy milk");
+let todo2 = new Todo("Clean room");
+let todo3 = new Todo("Go to the gym");
+let todo4 = new Todo("Go shopping");
+
+list.add(todo1);
+list.add(todo2);
+list.add(todo3);
+list.add(todo4);
+
+list.markDoneAt(2);
+
+console.log(`${list}`);
+
