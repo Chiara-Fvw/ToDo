@@ -11,11 +11,6 @@ class Todo {
     this.done = false;
   }
 
-  toString() {
-    let marker = this.isDone() ? Todo.DONE_MARKER : Todo.UNDONE_MARKER;
-    return `[${marker}] ${this.title}`;
-  }
-
   markDone() {
     this.done = true;
   }
@@ -26,6 +21,11 @@ class Todo {
 
   isDone() {
     return this.done;
+  }
+
+  toString() {
+    let marker = this.isDone() ? Todo.DONE_MARKER : Todo.UNDONE_MARKER;
+    return `[${marker}] ${this.title}`;
   }
 
   getTitle() {
@@ -99,6 +99,46 @@ class TodoList {
     this.todos.forEach(callback);
   }
 
+  filter(callback) {
+   let filteredList = new TodoList(this.title);
+    
+    this.forEach(todo => {
+      if (callback(todo)) {
+        filteredList.add(todo);
+      }
+    });
+
+    return filteredList;
+  }
+
+  findByTitle(title) {
+    return this.filter(todo => todo.getTitle() === title).first();
+  }
+
+  allDone() {    
+    return this.filter(todo => todo.isDone());
+  }
+
+  allNotDone() {
+    return this.filter(todo => !todo.isDone());
+  }
+
+  markDone(title) {
+    this.findByTitle(title).markDone();
+  }
+
+  markAllDone() {
+    this.forEach(todo => todo.markDone());
+  }
+
+  markAllUndone() {
+    this.forEach(todo => todo.markUndone());
+  }
+
+  toArray() {
+    return [...this.todos];
+  }
+
   _validateIndex(index) {
     if (!(index in this.todos)) {
       throw ReferenceError(`invalid index: ${index}`)
@@ -122,7 +162,12 @@ list.add(todo4);
 list.add(todo5);
 list.add(todo6);
 
-list.forEach(todo => console.log(todo.toString()));
+todo1.markDone();
+todo5.markDone();
 
+let doneTodos = list.filter(todo => todo.isDone());
 
+list.markAllDone();
+list.markAllUndone();
 
+console.log(list.toArray());
